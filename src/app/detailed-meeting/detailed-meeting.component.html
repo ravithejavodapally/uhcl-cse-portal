@@ -1,0 +1,30 @@
+<div>
+    <h3>Subject:{{selectedMeeting.subject}}</h3>
+    <h6>Date:{{selectedMeeting.date}}</h6>
+    <h6>Time:{{selectedMeeting.time}}</h6>
+    <h6>Duration:{{selectedMeeting.duration}}</h6>
+    <h6>Department:{{selectedMeeting.department}}</h6>
+    <h6>Facilitated by:{{selectedMeeting.hostedBy}}</h6>
+    <h6>Agenda List: </h6>
+    <div *ngFor="let item of agendaList;index as i">
+        <h6>{{i+1}}.{{item.agenda}}</h6>
+        <textarea class="col-md-11" width='100%' rows="5"
+            [readonly]="loggedInUserDataFromDB.Role=='Faculty' || finalised==selectedMeeting.finalised" name="{{item.id}}meetingMinutes"
+            [(ngModel)]="item.meetingMinutes"></textarea>
+    </div>
+    <div *ngIf="loggedInUserDataFromDB.Role=='Chair'">
+        <button [disabled]="selectedMeeting.finalised" (click)=showAddMeetingMinutesForm()>Save meeting minutes</button>
+        <button [disabled]="selectedMeeting.finalised" (click)=finaliseMeetingMinutes() class="btn btn-primary">Finalise</button>
+    </div>
+    <div *ngIf="loggedInUserDataFromDB.Role=='Faculty'">
+        <div>
+        <button (click)=approveButtonClicked()>Approve</button>
+        <button (click)=rejectButtonClicked()>Reject</button>
+    </div>
+        <textarea [(ngModel)]="comment" *ngIf="rejectClicked" class="col-md-10" rows="2" placeholder="Input Comment"></textarea>
+    </div>
+    <div *ngIf="rejectClicked">
+        <button (click)=cancelCommentSection()>Cancel</button>
+        <button (click)=saveComment()>Done</button>
+    </div>
+</div>
